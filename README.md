@@ -1,2 +1,2 @@
 # GeorgeTala.github.io
-#no se como hacer esto xd
+# no se como hacer esto xd
