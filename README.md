@@ -1,5 +1,3 @@
-# GeorgeTala.github.io
-# no se como hacer esto xd
 <!DOCTYPE html>
 <html lang="en">
     <head>
