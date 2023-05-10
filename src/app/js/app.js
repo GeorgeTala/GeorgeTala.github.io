@@ -146,9 +146,9 @@
     var $typed = $("#typed");
     if ($typed.length) {
       var typed = new Typed("#typed", {
-        strings: ["Ingeniero", "Mecánico"],
+        strings: ["estudiante de ingeniería mecánica"],
         loop: true,
-        typeSpeed: 70
+        typeSpeed: 100
       });
     }
   }
