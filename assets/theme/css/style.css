@@ -1102,7 +1102,7 @@ textArea.form-flat {
   left: 0;
   top: 0;
   height: 100%;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
 }
 .main-header .header-content-fixed:after {
   content: "";
@@ -1116,7 +1116,7 @@ textArea.form-flat {
   right: 0;
   bottom: 0;
   height: 100%;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
 }
 @media (max-width: 1024px) {
   .main-header .header-content-fixed {
@@ -1124,10 +1124,10 @@ textArea.form-flat {
   }
 }
 .main-header:hover .header-content-fixed:before {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.2);
 }
 .main-header:hover .header-content-fixed:after {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.2);
 }
 .main-header .whoim {
   position: absolute;
@@ -1180,7 +1180,7 @@ textArea.form-flat {
   }
 }
 .my-profile .my-pict .overfly {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.4);
   position: absolute;
   width: 100%;
   left: 0;
