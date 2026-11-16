@@ -37,7 +37,18 @@ Tipos de imagen en `media`:
 
 ## Portada
 
-La foto de fondo es `img/hero/main-header.webp` (y una versión de 1200 px para móvil). El efecto de diorama usa `img/hero/main-header-depth.png`, un mapa de profundidad en grises: blanco es lo cercano y negro lo lejano. Si cambias la foto, cambia también el mapa o quita `depth` en `data.js` para dejarla fija.
+La maqueta 3D se elige en `data.js`, en `hero.model`: `'avion'`, `'fabrica'` o `''` para no mostrar ninguna. Para probar la otra sin tocar nada, abre `https://georgetala.github.io/?maqueta=fabrica`.
+
+Las maquetas están en `js/maqueta.js`, hecho con three.js a partir de `src/maqueta.src.js`. Si editas la fuente, vuelve a generarlo con:
+
+```
+npm install three esbuild
+npx esbuild src/maqueta.src.js --bundle --minify --format=iife --outfile=js/maqueta.js
+```
+
+## Después de publicar un cambio
+
+Los navegadores guardan el CSS y el JS en caché. Para que nadie vea una mezcla de versión vieja y nueva, cada vez que cambies `css/` o `js/` sube el número `?v=` en `index.html`, `proyecto.html` y `404.html`, y `version` en `hero` dentro de `data.js`.
 
 ## Redes
 

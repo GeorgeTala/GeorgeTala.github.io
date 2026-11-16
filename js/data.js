@@ -28,12 +28,10 @@ window.SITE = {
     }
   },
 
-  // Portada: foto de fondo y su mapa de profundidad (blanco = cerca, negro = lejos),
-  // que da el efecto de diorama al mover el ratón.
+  // Maqueta 3D de la portada: 'avion' (estructura de balsa), 'fabrica' (mini planta) o '' para ninguna.
   hero: {
-    src: 'img/hero/main-header.webp',
-    srcSmall: 'img/hero/main-header-1200.webp',
-    depth: 'img/hero/main-header-depth.png'
+    model: 'avion',
+    version: '20261116-6'
   },
 
   links: [
@@ -50,7 +48,7 @@ window.SITE = {
     soft: { es: 'Software', en: 'Software' }
   },
 
-  // icon: cad, sim, wrench, data, team, code
+  // icon: cad, sim, wrench, team, code
   skills: [
     { icon: 'cad', tags: ['mec'],
       title: { es: 'Diseño mecánico y CAD', en: 'Mechanical design and CAD' },
@@ -61,9 +59,6 @@ window.SITE = {
     { icon: 'wrench', tags: ['mant'],
       title: { es: 'Planes de mantenimiento', en: 'Maintenance planning' },
       text: { es: 'Planes preventivos, programa MP, carga de trabajo y backlog para líneas de producción.', en: 'Preventive plans, PM schedules, workload and backlog for production lines.' } },
-    { icon: 'data', tags: ['mant', 'soft'],
-      title: { es: 'Datos de CMMS (Maximo)', en: 'CMMS data (Maximo)' },
-      text: { es: 'Exportaciones de activos, planes, MP y órdenes de trabajo convertidas en indicadores y planificación.', en: 'Asset, plan, PM and work order exports turned into indicators and planning.' } },
     { icon: 'team', tags: ['ges'],
       title: { es: 'Dirección de equipos y proyectos', en: 'Team and project leadership' },
       text: { es: 'Presidente de un grupo estudiantil de ingeniería aeronáutica: planificación, reclutamiento, capacitación y seguimiento de la fabricación.', en: 'President of an aeronautical engineering student group: planning, recruiting, training and manufacturing follow-up.' } },

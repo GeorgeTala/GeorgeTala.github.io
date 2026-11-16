@@ -1,4 +1,4 @@
-/* Lógica del sitio: idioma, portada (diorama) y página de proyecto. El contenido está en data.js. */
+/* Lógica del sitio: idioma, portada y página de proyecto. El contenido está en data.js. */
 (function () {
   'use strict';
   document.documentElement.classList.add('js');
@@ -18,6 +18,7 @@
       projectsSub: function (n, a, b) { return n + ' proyectos de ' + a + ' a ' + b + ', de la aeronáutica al mantenimiento industrial.'; },
       all: 'Todos',
       filterLabel: 'Filtrar proyectos por categoría',
+      modelLabel: 'Elegir maqueta', avion: 'Avión', fabrica: 'Fábrica',
       view: 'Ver proyecto',
       contactTitle: 'Hablemos.',
       contactSub: 'La forma más rápida de contactarme es por LinkedIn.',
@@ -38,6 +39,7 @@
       projectsSub: function (n, a, b) { return n + ' projects from ' + a + ' to ' + b + ', from aeronautics to industrial maintenance.'; },
       all: 'All',
       filterLabel: 'Filter projects by category',
+      modelLabel: 'Choose model', avion: 'Aircraft', fabrica: 'Factory',
       view: 'View project',
       contactTitle: "Let's talk.",
       contactSub: 'The quickest way to reach me is on LinkedIn.',
@@ -124,140 +126,68 @@
   }
   function mediaClass(m) { return 'media' + (m.plan ? ' is-plan' : '') + (m.fit ? ' is-fit' : ''); }
 
-  /* ---------- portada: foto con profundidad (diorama) y nieve ---------- */
-  function initDiorama(box) {
-    var H = S.hero;
-    var small = window.innerWidth <= 1000 && H.srcSmall;
-    var src = small ? H.srcSmall : H.src;
-    box.style.backgroundImage = 'url("' + src + '")';
-    if (REDUCED || !H.depth) return;
-
-    var canvas = document.createElement('canvas');
-    var gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: false });
-    if (!gl) return;
-
-    var VS = 'attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;v.y=1.-v.y;gl_Position=vec4(p,0.,1.);}';
-    var FS = [
-      'precision mediump float;',
-      'uniform sampler2D img;uniform sampler2D dep;uniform vec2 res;uniform vec2 isz;uniform vec2 off;uniform float zoom;',
-      'varying vec2 v;',
-      'void main(){',
-      '  float rs=res.x/res.y, ri=isz.x/isz.y;',
-      '  vec2 sc = rs>ri ? vec2(1.,ri/rs) : vec2(rs/ri,1.);',
-      '  vec2 c = vec2(.5,.45);',
-      '  vec2 uv = (v-.5)*sc + .5;',
-      '  uv.y += (c.y-.5)*(1.-sc.y);',
-      '  uv = (uv-c)/zoom + c;',
-      '  float d = texture2D(dep, uv).r;',
-      '  vec2 q = uv + off*(d-.45);',
-      '  d = texture2D(dep, q).r;',
-      '  gl_FragColor = texture2D(img, uv + off*(d-.45));',
-      '}'
-    ].join('\n');
-    function sh(type, code) { var s = gl.createShader(type); gl.shaderSource(s, code); gl.compileShader(s); return s; }
-    var prog = gl.createProgram();
-    gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
-    gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
-    gl.useProgram(prog);
-    var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
-    var loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    var U = {}; ['img', 'dep', 'res', 'isz', 'off', 'zoom'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
-
-    function tex(unit, image) {
-      var tx = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, tx);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+  /* ---------- portada: maqueta 3D ---------- */
+  var heroModel = null, heroInst = null;
+  function initHero(host) {
+    var H = S.hero || {};
+    // ?maqueta=avion | fabrica | no  permite elegir la inicial sin tocar data.js
+    heroModel = params.get('maqueta') || H.model;
+    if (!heroModel || heroModel === 'no') { heroModel = null; return; }
+    host.classList.add('has-model');
+    function go() {
+      if (!window.Maqueta) return;
+      heroInst = window.Maqueta.mount(host, { model: heroModel });
+      if (heroInst) renderSwitch();
     }
-    function load(url) {
-      return new Promise(function (ok, bad) { var i = new Image(); i.onload = function () { ok(i); }; i.onerror = bad; i.src = url; });
-    }
-
-    var snow = document.createElement('canvas'); snow.className = 'hero__snow';
-    var sx = snow.getContext('2d'), flakes = [];
-
-    Promise.all([load(src), load(H.depth)]).then(function (r) {
-      tex(0, r[0]); tex(1, r[1]);
-      gl.uniform1i(U.img, 0); gl.uniform1i(U.dep, 1);
-      gl.uniform2f(U.isz, r[0].naturalWidth, r[0].naturalHeight);
-      box.appendChild(canvas); box.appendChild(snow);
-      resize(); requestAnimationFrame(frame);
-    }).catch(function () { /* se queda la foto fija */ });
-
-    var W = 0, Hh = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
-    function resize() {
-      W = box.clientWidth; Hh = box.clientHeight;
-      canvas.width = Math.round(W * dpr); canvas.height = Math.round(Hh * dpr);
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.uniform2f(U.res, canvas.width, canvas.height);
-      snow.width = canvas.width; snow.height = canvas.height;
-      var n = Math.min(140, Math.round(W * Hh / 11000));
-      flakes = [];
-      for (var i = 0; i < n; i++) flakes.push({ x: Math.random(), y: Math.random(), r: .6 + Math.random() * 1.9, s: .15 + Math.random() * .5, ph: Math.random() * 6.28 });
-    }
-    window.addEventListener('resize', resize);
-
-    var target = { x: 0, y: 0 }, cur = { x: 0, y: 0 }, visible = true, t0 = performance.now();
-    box.parentNode.addEventListener('pointermove', function (e) {
-      var b = box.getBoundingClientRect();
-      target.x = ((e.clientX - b.left) / b.width - .5);
-      target.y = ((e.clientY - b.top) / b.height - .5);
+    if (window.Maqueta) { go(); return; }
+    var sc = document.createElement('script');
+    sc.src = 'js/maqueta.js?v=' + (H.version || '1'); sc.async = true; sc.onload = go;
+    document.head.appendChild(sc);
+  }
+  function renderSwitch() {
+    var box = $('#model-switch');
+    if (!box || !heroInst) return;
+    box.hidden = false;
+    box.setAttribute('aria-label', u('modelLabel'));
+    box.innerHTML = ['avion', 'fabrica'].map(function (m) {
+      return '<button type="button" data-model="' + m + '" aria-pressed="' + (m === heroModel) + '">' + u(m) + '</button>';
+    }).join('');
+  }
+  function bindSwitch() {
+    var box = $('#model-switch'); if (!box) return;
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b || !heroInst) return;
+      heroModel = b.getAttribute('data-model'); heroInst.setModel(heroModel); renderSwitch();
     });
-    box.parentNode.addEventListener('pointerleave', function () { target.x = 0; target.y = 0; });
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (en) {
-        var was = visible; visible = en[0].isIntersecting;
-        if (visible && !was) requestAnimationFrame(frame);
-      }).observe(box);
-    }
-
-    function frame(now) {
-      if (!visible) return;
-      var tt = (now - t0) / 1000;
-      cur.x += (target.x - cur.x) * .05; cur.y += (target.y - cur.y) * .05;
-      var ox = -cur.x * .045 + Math.sin(tt * .23) * .012;
-      var oy = -cur.y * .025 + Math.cos(tt * .19) * .006;
-      var sc = Math.min(1, Math.max(0, window.scrollY / Math.max(1, Hh)));
-      gl.uniform2f(U.off, ox, oy);
-      gl.uniform1f(U.zoom, 1.06 + sc * .06);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-      // nieve
-      sx.clearRect(0, 0, snow.width, snow.height);
-      sx.fillStyle = 'rgba(255,255,255,.85)';
-      for (var i = 0; i < flakes.length; i++) {
-        var f = flakes[i];
-        f.y += f.s * .0016 * (1 + f.r * .4); if (f.y > 1.02) { f.y = -.02; f.x = Math.random(); }
-        var x = (f.x + Math.sin(tt * .6 + f.ph) * .006 + ox * f.r * .25) * snow.width;
-        var y = (f.y + oy * f.r * .2) * snow.height;
-        sx.globalAlpha = .35 + f.r * .25;
-        sx.beginPath(); sx.arc(x, y, f.r * dpr, 0, 6.283); sx.fill();
-      }
-      sx.globalAlpha = 1;
-      requestAnimationFrame(frame);
-    }
   }
 
   /* ---------- portada ---------- */
   var activeFilter = 'all';
 
+  // Cada bloque se dibuja por separado: si uno falla, el resto de la página se sigue viendo.
+  function safe(fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } }
+
   function renderHome(first) {
     var P = S.projects, person = S.person;
 
-    $('#kicker').textContent = t(person.kicker);
-    if (first) initDiorama($('#hero-media'));
+    safe(function () { $('#kicker').textContent = t(person.kicker); });
+    if (first) safe(function () { initHero($('#inicio')); });
+    else safe(renderSwitch);
 
-    // habilidades
+    safe(function () { renderSkills(); });
+    safe(function () { renderProjects(P); });
+    safe(function () { renderContact(person); });
+    document.title = person.name + (lang === 'es' ? ', ingeniero' : ', engineer');
+  }
+
+  function renderSkills() {
     $('#skills-list').innerHTML = S.skills.map(function (s) {
       return '<article class="skill"><div class="skill__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">' +
         (ICONS[s.icon] || '') + '</svg></div><h3>' + esc(t(s.title)) + '</h3><p>' + esc(t(s.text)) + '</p>' + tagsHtml(s.tags) + '</article>';
     }).join('');
+  }
 
-    // proyectos
+  function renderProjects(P) {
     var ys = P.map(function (p) { return p.year; }).filter(Boolean);
     $('#projects-sub').textContent = u('projectsSub')(P.length, Math.min.apply(null, ys), Math.max.apply(null, ys));
     var counts = {};
@@ -280,14 +210,14 @@
         '<span class="cta card__more">' + u('view') + '</span></div></a>';
     }).join('');
     applyFilter();
+  }
 
-    // contacto
+  function renderContact(person) {
     var c = S.links.map(function (l) {
       return '<a class="btn btn--light" href="' + esc(l.href) + '" target="_blank" rel="noopener">' + (BRANDS[l.icon] || '') + esc(l.label) + '</a>';
     }).join('');
     if (person.email) c += '<a class="btn btn--light" href="mailto:' + esc(person.email) + '">' + esc(person.email) + '</a>';
     $('#contact-actions').innerHTML = c;
-    document.title = person.name + (lang === 'es' ? ', ingeniero' : ', engineer');
   }
 
   function applyFilter() {
@@ -380,8 +310,9 @@
   /* ---------- arranque ---------- */
   var page = document.body.getAttribute('data-page');
   var render = page === 'project' ? renderProject : renderHome;
-  applyStatic();
-  render(true);
+  safe(applyStatic);
+  safe(function () { render(true); });
   bindLang(render);
   bindFilters();
+  bindSwitch();
 })();

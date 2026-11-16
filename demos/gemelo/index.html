@@ -4884,7 +4884,7 @@ MP-5630-1,Lubricación de torno · Torno del taller,,5630,3,LUB,2026-11-17,4,WEE
        planifica la semana siguiente con el lote que vence ese día: un MP que vence
        el miércoles 21 oct (o hasta el martes 27) se ejecuta en la S44.
      · Si al terminar su semana de ejecución el MP sigue con la misma fecha de
-       vencimiento en Maximo, ya lleva retraso (desde el lunes 2 nov en el ejemplo).
+       vencimiento en el CMMS, ya lleva retraso (desde el lunes 2 nov en el ejemplo).
      · Si la semana empieza otro día, cada semana lleva el número ISO de su día central:
        empezando en domingo, la semana del dom 25 oct al sáb 31 oct de 2026 es la S44. */
   const DAY_NAMES = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
@@ -5017,7 +5017,7 @@ MP-5630-1,Lubricación de torno · Torno del taller,,5630,3,LUB,2026-11-17,4,WEE
   /* ---------------------------------------------------------
      2bis. Configuración de la planta
      · Lo que cambia de una planta a otra vive en CFG: nombre, título y logo; regla para
-       leer la línea en la ubicación de Maximo; nombre, orden, filtro y gemelo de cada
+       leer la línea en la ubicación del CMMS; nombre, orden, filtro y gemelo de cada
        línea; calendario de los MP; umbrales de espera y acceso autorizado.
      · Los valores de fábrica reproducen el panel original: sin configuración guardada,
        todo funciona exactamente igual que antes.
@@ -5188,7 +5188,7 @@ MP-5630-1,Lubricación de torno · Torno del taller,,5630,3,LUB,2026-11-17,4,WEE
   let CUR = CAL.weekOf(TODAY);    // semana de ejecución en curso (de fábrica, de lunes a domingo)
 
   /* MP ATRASADO: en la fecha de corte de MP_NAMES (día de la exportación) su semana de
-     ejecución ya había terminado y Maximo seguía con la misma fecha de vencimiento.
+     ejecución ya había terminado y el CMMS seguía con la misma fecha de vencimiento.
      El retraso se cuenta desde el domingo en que terminó esa semana. Los demás «tocan»
      en la semana por su frecuencia normal. El corte de los datos incluidos va en el
      atributo data-corte del CSV; al cargar un CSV nuevo se toma la fecha del archivo. */
@@ -6167,7 +6167,7 @@ MP-5630-1,Lubricación de torno · Torno del taller,,5630,3,LUB,2026-11-17,4,WEE
         '<td class="r">' + nf(x.hours, 1) + '</td>' +
         '<td>' + (x.date ? esc(dayLabel(x.date)) : '<span class="hint">—</span>') + '</td>' +
         '<td>' + (x.late
-          ? '<span class="sit late" title="Vence en Maximo el ' + esc(fmtDate(m.next)) + ' · tocaba la S' + planWeek(m.next).week + ', que terminó el ' + esc(fmtDate(deadlineOf(m.next))) + '">Atrasado · ' + nf(x.lateDays) + ' d</span>'
+          ? '<span class="sit late" title="Vence en el CMMS el ' + esc(fmtDate(m.next)) + ' · tocaba la S' + planWeek(m.next).week + ', que terminó el ' + esc(fmtDate(deadlineOf(m.next))) + '">Atrasado · ' + nf(x.lateDays) + ' d</span>'
           : '<span class="sit ok">En fecha</span>') + '</td>' +
         '<td><button class="btn btn-xs st-' + (x.state || 'P') + '" data-resched="' + esc(reschedKey(w, m.num)) + '"' +
         ' title="Pulsa para marcar como ' + esc(stateName(nextState(x.state)).toLowerCase()) + '">' +
@@ -9183,7 +9183,7 @@ MP-5630-1,Lubricación de torno · Torno del taller,,5630,3,LUB,2026-11-17,4,WEE
     const isWO = key === 'wotrack';
 
     const steps = [
-      { t: 'Entra en IBM Maximo', d: 'Con tu usuario habitual, en el entorno de producción.' },
+      { t: 'Entra en el CMMS', d: 'Con tu usuario habitual, en el entorno de producción.' },
       { t: 'Abre la sección que corresponde', d: 'Para este archivo: <b>' + esc(f.app) + '</b>.' },
       isWO
         ? {
@@ -9227,7 +9227,7 @@ MP-5630-1,Lubricación de torno · Torno del taller,,5630,3,LUB,2026-11-17,4,WEE
       '<li>Pulsa <b>Guardar copia del panel</b> para dejar una versión con estos datos ya incrustados. Mientras no lo hagas, lo cargado vive solo en esta pestaña.</li>' +
       '</ul>';
 
-    openModal(modalHead({ eyebrow: 'Actualizar · ' + f.name, eyebrowLg: true, title: 'Cómo descargar este archivo desde Maximo' }) +
+    openModal(modalHead({ eyebrow: 'Actualizar · ' + f.name, eyebrowLg: true, title: 'Cómo descargar este archivo desdel CMMS' }) +
       '<div class="modal-body">' + body + '</div>');
   }
 
@@ -9768,7 +9768,7 @@ MP-5630-1,Lubricación de torno · Torno del taller,,5630,3,LUB,2026-11-17,4,WEE
       '<p class="hint">Cada semana lleva el número ISO de su día central. Lo que vence en los 7 días que empiezan en el día de salida forma un lote y se ejecuta en la semana elegida.</p>' +
       '</div></section>';
     const lines =
-      '<section class="panel cfg-sec span2" id="cfg-lines"><div class="panel-head"><h2>Líneas</h2><span class="sub">Cómo se leen en la ubicación de Maximo, cómo se llaman y dónde aparecen</span></div><div class="cfg-body">' +
+      '<section class="panel cfg-sec span2" id="cfg-lines"><div class="panel-head"><h2>Líneas</h2><span class="sub">Cómo se leen en la ubicación del CMMS, cómo se llaman y dónde aparecen</span></div><div class="cfg-body">' +
       '<div class="cfg-row">' +
       '<label class="cfg-f"><span>La línea se reconoce por</span>' + cfgSel('lines.rule.mode', [['prefix', 'Un texto seguido del número'], ['regex', 'Expresión regular (avanzado)']], d.lines.rule.mode) + '</label>' +
       '<label class="cfg-f" data-rule="prefix"' + (d.lines.rule.mode === 'prefix' ? '' : ' hidden') + '><span>Texto delante del número</span><input type="text" data-cfg="lines.rule.prefix" value="' + esc(d.lines.rule.prefix) + '" maxlength="20" spellcheck="false" class="mono"></label>' +
