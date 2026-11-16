@@ -11,10 +11,11 @@
   <meta property="og:image" content="https://georgetala.github.io/img/og.jpg">
   <meta property="og:url" content="https://georgetala.github.io/">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#efefef">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="img/teus/airframe.webp" as="image">
+  <link rel="preload" href="fonts/inter-tight.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="img/hero/main-header-1200.webp" as="image" media="(max-width: 1000px)">
+  <link rel="preload" href="img/hero/main-header.webp" as="image" media="(min-width: 1001px)">
   <link rel="stylesheet" href="css/site.css">
 </head>
 <body data-page="home">
@@ -37,31 +38,28 @@
 
   <main>
     <section class="hero" id="inicio">
+      <div class="hero__media" id="hero-media" role="img" aria-label="Jorge Talavera en un mirador nevado"></div>
       <div class="container">
-        <div>
-          <p class="hero__kicker" id="kicker"></p>
-          <h1 class="hero__title" id="hello">Hola, soy <span>Jorge</span></h1>
-          <p class="hero__intro" id="intro"></p>
-          <div class="actions">
-            <a class="btn btn--primary" href="#proyectos" data-ui="seeWork">Ver proyectos</a>
-            <a class="btn btn--ghost" href="#contacto" data-ui="getInTouch">Contacto</a>
-          </div>
+        <h1 class="hero__title"><span>Jorge</span> <span>Talavera</span></h1>
+        <p class="hero__kicker" id="kicker"></p>
+        <div class="actions">
+          <a class="cta" href="#proyectos" data-ui="seeWork">Ver proyectos</a>
+          <a class="cta" href="#contacto" data-ui="getInTouch">Contacto</a>
         </div>
-        <figure class="hero__fig" id="hero-fig"></figure>
       </div>
     </section>
 
     <section class="section" id="habilidades" aria-labelledby="h-skills">
       <div class="container">
         <div class="section__head">
-          <h2 class="section__title" id="h-skills" data-ui="skillsTitle">Habilidades</h2>
-          <p class="section__sub" data-ui="skillsSub"></p>
+          <h2 class="eyebrow" id="h-skills" data-ui="skillsEyebrow">Habilidades</h2>
+          <p class="section__lead" data-ui="skillsLead"></p>
         </div>
         <div class="skills" id="skills-list"></div>
       </div>
     </section>
 
-    <section class="section" id="proyectos" aria-labelledby="h-projects">
+    <section class="section section--alt" id="proyectos" aria-labelledby="h-projects">
       <div class="container">
         <div class="section__head">
           <h2 class="section__title" id="h-projects" data-ui="projectsTitle">Proyectos</h2>
@@ -69,16 +67,15 @@
         </div>
       </div>
       <div class="filters" id="filters" role="group"></div>
-      <div class="work">
-        <div class="container">
-          <div class="cards" id="cards"></div>
-        </div>
+      <div class="container">
+        <div class="cards" id="cards"></div>
       </div>
     </section>
 
     <section class="section contact" id="contacto" aria-labelledby="h-contact">
       <div class="container">
         <h2 class="section__title" id="h-contact" data-ui="contactTitle">Hablemos.</h2>
+        <p data-ui="contactSub"></p>
         <div class="actions" id="contact-actions"></div>
       </div>
     </section>

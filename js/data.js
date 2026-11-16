@@ -20,28 +20,25 @@
 window.SITE = {
   person: {
     name: 'Jorge Talavera',
-    first: 'Jorge',
     // Correo opcional: si lo pones aquí aparece un botón en Contacto. Vacío = no se muestra.
     email: '',
     kicker: {
       es: 'Ingeniero · Mantenimiento industrial y diseño mecánico',
       en: 'Engineer · Industrial maintenance and mechanical design'
-    },
-    intro: {
-      es: 'Soy ingeniero mexicano y trabajo en una planta de producción en España. Me enfoco en el mantenimiento industrial, el diseño mecánico y las herramientas digitales que hacen más fácil planificar. Empecé en la aeronáutica con Aerodesign, el grupo estudiantil del Tec de Monterrey, donde llegué a presidente. Aquí reúno los proyectos que he desarrollado.',
-      en: "I'm a Mexican engineer working at a production plant in Spain. I focus on industrial maintenance, mechanical design and digital tools that make planning easier. I started out in aeronautics with Aerodesign, the student group at Tec de Monterrey, where I became president. These are the projects I've developed."
     }
   },
 
+  // Portada: foto de fondo y su mapa de profundidad (blanco = cerca, negro = lejos),
+  // que da el efecto de diorama al mover el ratón.
   hero: {
-    src: 'img/teus/airframe.webp',
-    caption: { es: 'Estructura del avión Teus, 2023.', en: 'Teus airframe, 2023.' }
+    src: 'img/hero/main-header.webp',
+    srcSmall: 'img/hero/main-header-1200.webp',
+    depth: 'img/hero/main-header-depth.png'
   },
 
   links: [
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/jorge-talavera11/' },
-    { label: 'GrabCAD', href: 'https://grabcad.com/jorge.talavera-3' },
-    { label: 'YouTube', href: 'https://youtube.com/@George_tala11' }
+    { label: 'LinkedIn', icon: 'linkedin', href: 'https://www.linkedin.com/in/jorge-talavera11/' },
+    { label: 'YouTube', icon: 'youtube', href: 'https://youtube.com/@George_tala11' }
   ],
 
   categories: {
@@ -92,19 +89,19 @@ window.SITE = {
         es: [
           'El panel junta en un solo lugar lo que normalmente está repartido entre el CMMS, hojas de cálculo y planos: un gemelo 3D y un esquema de cada línea, el plan maestro anual, la carga semanal, la planificación, el backlog y la ficha técnica de cada equipo.',
           'Cada equipo se colorea según su estado (MP atrasado, OT abierta, MP esta semana o al día), calculado con el programa de mantenimiento y las órdenes de trabajo a una fecha de corte.',
-          'Para montar el panel de una planta nueva se llena una plantilla de Excel con planta, líneas, etapas, activos, planes, tareas y programa MP. Un script en Python valida los datos, avisa de lo que no cuadra y escribe el HTML en un par de segundos. Después, el panel también lee las exportaciones CSV de Maximo para las actualizaciones mensuales.',
+          'Para montar el panel de una planta nueva se llena una plantilla de Excel con planta, líneas, etapas, activos, planes, tareas y programa MP. Un script en Python valida los datos, avisa de lo que no cuadra y escribe el HTML en un par de segundos. Después, el panel también lee las exportaciones CSV del CMMS para las actualizaciones mensuales.',
           'Se abre con doble clic en cualquier navegador, sin instalar nada y sin servidor, así que se puede dejar en SharePoint, Drive o una carpeta de red.'
         ],
         en: [
           'The dashboard brings together what usually lives across the CMMS, spreadsheets and drawings: a 3D twin and a schematic of each line, the annual master plan, the weekly workload, planning, the backlog and a data sheet for every machine.',
           'Each machine is colored by status (overdue PM, open work order, PM this week or up to date), computed from the maintenance schedule and work orders at a cut-off date.',
-          'To build the dashboard for a new plant you fill in an Excel template with the plant, lines, stages, assets, plans, tasks and PM schedule. A Python script validates the data, flags anything that does not add up and writes the HTML in a couple of seconds. After that, the dashboard also reads Maximo CSV exports for monthly updates.',
+          'To build the dashboard for a new plant you fill in an Excel template with the plant, lines, stages, assets, plans, tasks and PM schedule. A Python script validates the data, flags anything that does not add up and writes the HTML in a couple of seconds. After that, the dashboard also reads CSV exports from the CMMS for monthly updates.',
           'It opens with a double click in any browser, with nothing to install and no server, so it can live on SharePoint, Drive or a network folder.'
         ]
       },
       results: {
-        es: ['Gemelo 3D y esquema de cada línea, con el estado de cada equipo', 'Plan maestro anual, carga semanal y planificación', 'Backlog y ficha técnica de cada equipo', 'Generación desde una plantilla de Excel, con validación en Python', 'Lectura de exportaciones CSV de Maximo para las actualizaciones', 'Un solo archivo HTML que se abre sin instalar nada ni servidor'],
-        en: ['3D twin and schematic of each line, with every machine’s status', 'Annual master plan, weekly workload and planning', 'Backlog and data sheet for every machine', 'Generated from an Excel template, validated in Python', 'Reads Maximo CSV exports for updates', 'A single HTML file that opens with nothing to install and no server']
+        es: ['Gemelo 3D y esquema de cada línea, con el estado de cada equipo', 'Plan maestro anual, carga semanal y planificación', 'Backlog y ficha técnica de cada equipo', 'Generación desde una plantilla de Excel, con validación en Python', 'Lectura de exportaciones CSV del CMMS para las actualizaciones', 'Un solo archivo HTML que se abre sin instalar nada ni servidor'],
+        en: ['3D twin and schematic of each line, with every machine’s status', 'Annual master plan, weekly workload and planning', 'Backlog and data sheet for every machine', 'Generated from an Excel template, validated in Python', 'Reads CSV exports from the CMMS for updates', 'A single HTML file that opens with nothing to install and no server']
       },
       // ready: false oculta el botón hasta que la demo esté en demos/gemelo/
       demo: {

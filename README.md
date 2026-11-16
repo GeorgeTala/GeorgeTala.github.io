@@ -35,6 +35,14 @@ Tipos de imagen en `media`:
 - Sin nada: foto normal.
 - `tall: true`: imagen o video vertical; ocupa una columna angosta.
 
+## Portada
+
+La foto de fondo es `img/hero/main-header.webp` (y una versión de 1200 px para móvil). El efecto de diorama usa `img/hero/main-header-depth.png`, un mapa de profundidad en grises: blanco es lo cercano y negro lo lejano. Si cambias la foto, cambia también el mapa o quita `depth` en `data.js` para dejarla fija.
+
+## Redes
+
+Los botones de contacto salen de `links` en `data.js`. Los logos son de Font Awesome Free (licencia CC BY 4.0).
+
 ## Demo del gemelo digital
 
 La demo vive en `demos/gemelo/index.html` y solo debe llevar datos de la planta ficticia. El botón «Abrir la demo» aparece cuando en `data.js` el proyecto `gemelo-digital` tiene `demo.ready: true`.
